@@ -1,10 +1,12 @@
-//try to split test into mutiple section but toHaveBeenCalledTimes is called twice
-
 import React from "react";
 import { render, waitForElement } from "@testing-library/react";
 import "jest-dom/extend-expect";
 import axios from "axios";
 import Users, { url } from "./Users";
+
+afterEach(() => {
+  axios.get.mockClear();
+});
 
 function mockCall() {
   axios.get.mockResolvedValueOnce({
@@ -42,8 +44,6 @@ test("render users' name on rows", async () => {
     getAllByTestId("row").map(row => row.textContent)
   );
   expect(rowValues).toEqual(["ali", "abu"]);
-
-  //called twice, why?
   expect(axios.get).toHaveBeenCalledTimes(1);
   expect(axios.get).toHaveBeenCalledWith(url);
 });
